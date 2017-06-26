@@ -19,17 +19,17 @@ This code is under the [MIT License](License.txt). Each of the dependencies - li
 
 # Data used
 
-The application relies on the open data about recent earthquakes made available by the USGS ([https://earthquake.usgs.gov/](https://earthquake.usgs.gov/])
+The application relies on the open data about recent earthquakes made available by the USGS ([https://earthquake.usgs.gov/](https://earthquake.usgs.gov/]))
 
-The data usage and redistribution is subject to the license provided on the USGS website.
+The data usage and redistribution is subject to the license provided on the [USGS website](https://earthquake.usgs.gov/]).
 
-# 
+# Screen captures
 
-![Screenshot of the application]( "Screenshot of the application")
+![Screenshot of the application](/screenshots/earthquakes.jpg "Screenshot of the application")
 *Screenshot of the application*
 
-![Settings panel]( "Settings panel")
+![Settings panel](https://github.com/guillaumeprevost/earthquakes-monitor/raw/master/screenshots/earthquakes.jpg "Settings panel")
 *Settings panel*
 
-![Boundaries displayed]( "Boundaries displayed")
+![Boundaries displayed](https://github.com/guillaumeprevost/earthquakes-monitor/blob/master/screenshots/earthquakes.jpg "Boundaries displayed")
 *Boundaries displayed*

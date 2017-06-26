@@ -4,7 +4,9 @@ This is a very simple single-page visualisation of the recent earthquakes around
 
 It was developped to experiment with the Leafleft map library and playing around with reading JSON data from a web service.
 
-A live demo is available at: http://www.justahype.net/earthquakes
+More information [here](http://www.justahype.net/projects/earthquakes.html).
+
+A live demo is available at: [http://www.justahype.net/earthquakes](http://www.justahype.net/projects/earthquakes.html)
 
 This code is under the [MIT License](License.txt). Each of the dependencies - libraries, data or other - belong to their respective authors and are subject to their respective LICENSES.
 
@@ -28,8 +30,12 @@ The data usage and redistribution is subject to the license provided on the [USG
 ![Screenshot of the application](/screenshots/earthquakes.jpg "Screenshot of the application")
 *Screenshot of the application*
 
-![Settings panel](https://github.com/guillaumeprevost/earthquakes-monitor/raw/master/screenshots/earthquakes.jpg "Settings panel")
+The "Infos & Settings" pane can be unfolded from the top-right corner of the page. From there, is is possible to change the filters for the earthquakes displayed on the map, using the magnitude and the time frame period to display (maximum one month ago).
+
+![Settings panel](/screenshots/settings.jpg "Settings panel")
 *Settings panel*
 
-![Boundaries displayed](https://github.com/guillaumeprevost/earthquakes-monitor/blob/master/screenshots/earthquakes.jpg "Boundaries displayed")
+There is also an option to show on the map the boundaries of the tectonic plates by checking a box in the Settings.
+
+![Boundaries displayed](/screenshots/boundaries.jpg "Boundaries displayed")
 *Boundaries displayed*

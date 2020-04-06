@@ -12,25 +12,31 @@
 	<link rel="stylesheet" href="css/style.css" />
 	<link rel="stylesheet" href="css/rangeslider.css" type="text/css" />
 	<link rel="stylesheet" href="css/loader.css" type="text/css" />
-	
+
 	<script src="js/leaflet/v0.7.7/leaflet.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 	<script src="js/jQDateRangeSlider-withRuler-min.js"></script> <!-- http://ghusse.github.io/jQRangeSlider -->
 	<script src="js/slidereveal.js"></script> <!-- http://nnattawat.github.io/slideReveal/ -->
 	<script src="geojson/PB2002_boundaries.json"></script>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-101644076-1', 'auto'); ga('send', 'pageview');
+  </script>
   </head>
-  
+
   <body>
 	<script type="text/javascript">
 		if ($(document).width() < 800) {
 			alert("For the best experience, it is recommended to view this page with a resolution larger than 800px wide (your current browser's resolution is " + $(document).width() + "px).");
 		}
 	</script>
-  
-  
+
+
 	<div id="map"></div>
-	
+
 	<div id="loader" class="cs-loader">
 	  <div class="cs-loader-inner">
 		Loading<br />
@@ -42,7 +48,7 @@
 		<label>	●</label>
 	  </div>
 	</div>
-	
+
 	<div id="slider" class="slider">
 		<h2>Settings</h2>
 		<label for="magnitude">Magnitude filter:</label>
@@ -53,21 +59,21 @@
 		  <option  value="1.0"> Magnitude 1.0+</option>
 		  <option  value="0.0">All earthquakes</option>
 		</select>
-		
+
 		<label for="dateSlider">Time Period filter:</label>
 		<div id="dateSlider"></div>
 		<br />
 		<br />
-		
+
 		<label for="btnTectonicPlates">Show/hide tectonic plates:</label>
 		<button id="btnTectonicPlates" onclick="toggleTectonicPlates();" class="btn">Show</button>
-		
+
 		<h2>Information</h2>
-		
+
 		<div id="summary">
 			<p>Data from: <a href="http://earthquake.usgs.gov/" target="_blank">U.S. Geological Survey</a></p>
 		</div>
-		
+
 		<div class='legend'>
 		<table style="width: 100%">
 			<thead>
@@ -107,18 +113,18 @@
 		</table>
 		<small>Source: <a href="http://earthquake.usgs.gov/data/pager/" target="_blank">USGS PAGER System</a></small>
 		</div>
-		
+
     </div>
-		
+
 	<div id="menu-handle">
 		<span class="menu-text">Infos & Settings</span><!--<i class="fa fa-chevron-left"></i>-->
 	</div>
-	
+
 	<div class="bottom-title">
 		<div class="title"><h1>EARTHQUAKE MONITOR</h1></div>
 	</div>
-	
-	<script type="text/javascript">		
+
+	<script type="text/javascript">
 		$(function(){
 			slider = $("#slider").slideReveal({
 			  width: "50%",
@@ -131,18 +137,18 @@
 			});
 		});
 	</script>
-	
+
 	<script>
 		// Create map
 		var map = L.map('map').setView([10.0, 0.0], 2);
-		
+
 		// Dark Background
 		var CartoDB_DarkMatter = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions" target="_blank">CartoDB</a> | Data from: <a href="http://earthquake.usgs.gov/earthquakes/" target="_blank">USGS.gov</a>',
 			subdomains: 'abcd',
 			maxZoom: 19
 		}).addTo(map);
-		
+
 		// Get user's location
 		/*function onLocationFound(e) {
 			L.marker(e.latlng).addTo(map).bindPopup("<strong>You are here</strong><br />(or about " + e.accuracy / 2 + "m from here)");
@@ -153,38 +159,38 @@
 		map.on('locationfound', onLocationFound);
 		map.on('locationerror', onLocationError);
 		map.locate({setView: false, maxZoom: 16});*/
-		
+
 		var markers = [];
 		var earthquakes;
 		// Retrieve Earthquake events details
 		// GEOJSON Details here:  http://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson_detail.php
 		$.getJSON('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson', function(data) {
 			earthquakes	= data;
-			
+
 			updateGlobalInfos(earthquakes.metadata);
-			
+
 			var endDateDefault = new Date();
 			var startDateDefault = new Date(endDateDefault.getFullYear(), endDateDefault.getMonth(), endDateDefault.getDate() - 7);
 			updateMap(startDateDefault, endDateDefault, $("#magnitude").val());
 			updateSlider(startDateDefault, endDateDefault);
-			
+
 			$("#loader").hide();
 			$("#menu-handle").effect( "highlight", {color:"#ffcc00"}, 2000 );
 		});
-		
+
 		function updateGlobalInfos(metadata) {
 			if (typeof(earthquakes) !== undefined) {
 				$("#summary p").append( '<br/>Updated on: ' + new Date(metadata.generated).toString() + '.<br/>Total earthquakes last month: ' + metadata.count + '.');
 			}
 		}
-		
+
 		function zoomOnMarker(minLat, minLng, maxLat, maxLng) {
 			var southWest = L.latLng(minLat, minLng),
 				northEast = L.latLng(maxLat, maxLng),
 				bounds = L.latLngBounds(southWest, northEast);
 			map.fitBounds(bounds);
 		}
-		
+
 		var tectonicPlatesLayer = null;
 		// Adds/Removes tectonic plates boundaries to the map
 		function toggleTectonicPlates() {
@@ -205,20 +211,20 @@
 				}
 			}
 		}
-		
+
 		// Add a CircleMarker with a popup for each Earthquake for the selected start date, end date and magnitude
 		function updateMap(startDate, endDate, magnitude) {
 			$("#loader").show();
-			
+
 			// Clear all markers from map
 			$.each(markers, function(key, marker) {
 				map.removeLayer(marker);
 			});
-						
+
 			if (typeof(earthquakes) !== undefined) {
 				$.each(earthquakes.features, function(key, feature) {
 					// If the earthquake happened in the required time period & magnitude as required
-					if (feature.properties.time >= startDate.getTime() && feature.properties.time < endDate.getTime() && feature.properties.mag >= magnitude) {						
+					if (feature.properties.time >= startDate.getTime() && feature.properties.time < endDate.getTime() && feature.properties.mag >= magnitude) {
 						// Create marker and bind info popup to it
 						var popupContent = "<p>";
 						if (feature.properties) {
@@ -230,9 +236,9 @@
 						popupContent += "<p>";
 						popupContent += "<a onclick=\"$('.leaflet-popup').hide(); zoomOnMarker(" + (feature.geometry.coordinates[1] - 5) + ", " + (feature.geometry.coordinates[0] + 5) + ", " + (feature.geometry.coordinates[1] + 5) + ", " + (feature.geometry.coordinates[0] - 5) + ");\" style=\"cursor: pointer\">Zoom in</a>";
 						popupContent += "</p>";
-						
+
 						circleMarker = L.circleMarker(
-							L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]), 
+							L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]),
 							{
 								radius: feature.properties.mag * 10 ,
 								color: feature.properties.alert !== null ? feature.properties.alert : 'lightblue'
@@ -240,14 +246,14 @@
 						)
 						.bindPopup(popupContent, {minWidth: 100})
 						.addTo(map);
-												
+
 						markers.push(circleMarker);
 					}
 				});
 			}
 			$("#loader").hide();
 		}
-		
+
 		// Create the slider
 		function updateSlider(startDate, endDate) {
 			var now = new Date();
@@ -260,12 +266,12 @@
 			  updateMap(data.values.min, data.values.max, $("#magnitude").val())
 			});
 		}
-		
+
 		// Bind event to the Magnitude dropdown
 		$("#magnitude").change(function() {
 			var dateValues = $("#dateSlider").dateRangeSlider("values");
 			updateMap(dateValues.min, dateValues.max, $("#magnitude").val())
 		});
-	</script>	
+	</script>
   </body>
 </html>
